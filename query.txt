@@ -1,0 +1,59 @@
+drop DATABASE shoppingWeb;
+CREATE DATABASE shoppingWeb;
+show databases;
+use shoppingWeb;
+show tables;
+
+CREATE TABLE Owner (
+	id int auto_increment NOT NULL,
+    name varchar(255),
+    password varchar(20),
+    token varchar(20),
+    gmail varchar(255),
+    phoneNum varchar(15),
+    address varchar(255),
+    shopName varchar(255),
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE User (
+	id int auto_increment NOT NULL,
+    name varchar(255),
+    password varchar(20),
+    token varchar(20),
+    gmail varchar(255),
+    phoneNum varchar(15),
+    address varchar(255),
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE Product (
+	id int auto_increment NOT NULL,
+    productName varchar(255),
+    image varchar(20),
+    description TEXT(500),
+    a_unit_of_price varchar(255),
+    primary key (id)
+);
+
+CREATE TABLE ShoppingCart (
+	id int auto_increment NOT NULL,
+    userID int,
+    selectedProduct varchar(255),
+    productID int,
+    amount int,
+    PRIMARY KEY (id),
+    foreign key (userID) references User(id),
+    foreign key (productID) references Product(id)
+);
+
+CREATE TABLE Ordering (
+	id int auto_increment NOT NULL,
+    userID int,
+    selectedProduct varchar(255),
+    productID int,
+    amount int,
+    PRIMARY KEY (id),
+    foreign key (userID) references User(id),
+    foreign key (productID) references Product(id)
+);
