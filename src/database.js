@@ -4,7 +4,7 @@ const util = require("util");
 const dbParams = {
   host: "127.0.0.1",
   user: "root",
-  password: "admin",
+  password: "Kiencuong15022005",
   database: "shoppingWeb",
 };
 
