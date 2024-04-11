@@ -1,9 +1,11 @@
 const express = require("express");
+const bcrypt = require("bcrypt");
 const bodyParser = require("body-parser");
 const { queryAsync } = require("./src/database");
 const jwt = require("jsonwebtoken");
 
 const app = express();
+app.use(express.json());
 app.use(bodyParser.json());
 
 app.post("/api/signup", async (req, res) => {
@@ -69,6 +71,19 @@ app.post("/api/login", async (req, res) => {
   } catch (error) {
     console.log(error);
     res.json({ error: "An error occur" });
+  }
+});
+
+app.post('/api/hash-password', async (req, res) => {
+  try {
+    const { password } = req.body;
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    console.log(saltRounds, hashedPassword);
+    res.status(200).json({ hashedPassword });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 
