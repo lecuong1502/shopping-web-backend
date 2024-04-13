@@ -58,19 +58,20 @@ app.post("/api/login", async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, saltRounds);
     console.log("hased login", password, hashedPassword);
     const loginQuery = `SELECT * FROM User WHERE gmail='${gmail}';`;
-    
-    const resultUsers = await queryAsync(loginQuery);
 
+    const resultUsers = await queryAsync(loginQuery);
 
     if (resultUsers.length === 0) {
       res.json({ error: "Not exist account" });
       return;
     }
 
-    const checkPassword = await bcrypt.compare(password, resultUsers[0].password);
-   
+    const checkPassword = await bcrypt.compare(
+      password,
+      resultUsers[0].password
+    );
+
     if (checkPassword) {
-      
       const secretKey = "domayhackduoc";
 
       const token = jwt.sign({ gmail }, secretKey, { expiresIn: "3m" });
@@ -79,13 +80,62 @@ app.post("/api/login", async (req, res) => {
       const tokenQuery = `UPDATE User SET token='${token}' WHERE gmail='${gmail}';`;
       await queryAsync(tokenQuery);
 
-      res.json({ ...resultUsers[0], password: null });
+      res.json({ ...resultUsers[0], password: null, token });
     } else {
       res.json({ error: "Not exist account" });
     }
   } catch (error) {
     console.log(error);
     res.json({ error: "An error occur" });
+  }
+});
+
+app.post("/api/create-product", async (req, res) => {
+  try {
+    const { productName, image, description, a_unit_of_price } = req.body;
+    const { token } = req.headers;
+    const findUserQuery = `SELECT * FROM User WHERE token='${token}';`;
+    const resultUsers = await queryAsync(findUserQuery);
+    if (resultUsers.length === 0) {
+      res.json({ error: "Invalid token" });
+      return;
+    }
+
+    if (!resultUsers[0].isOwner) {
+      res.json({ error: "No permission" });
+      return;
+    }
+
+    const createProductQuery = `INSERT INTO Product (productName, image, description, a_unit_of_price) VALUES ('${productName}', '${image}', '${description}', '${a_unit_of_price}');`;
+    const createprodResult = await queryAsync(createProductQuery);
+    res.json({ ...createprodResult });
+  } catch (error) {
+    res.json({ error: "Error" });
+    return;
+  }
+});
+
+app.post("/api/products", async (req, res) => {
+  try {
+    const printInfoAllProd = `SELECT * FROM Product;`;
+    const resultProduct = await queryAsync(printInfoAllProd);
+    res.json({ data: resultProduct });
+  } catch (error) {
+    console.log(error);
+    res.json({ error: "Not any products" });
+    return;
+  }
+});
+
+app.get("/api/products/:id", async (req, res) => {
+  try {
+    const productID = req.params.id;
+    const productQuery = `SELECT * FROM Product WHERE id = "${productID}";`;
+    const resultProduct = await queryAsync(productQuery);
+    res.json({ ...resultProduct[0] })
+  } catch (error) {
+    res.json({ error: "Error" });
+    return;
   }
 });
 

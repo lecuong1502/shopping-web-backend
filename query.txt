@@ -16,7 +16,7 @@ CREATE TABLE User (
 CREATE TABLE Product (
 	id int auto_increment NOT NULL,
     productName varchar(255),
-    image varchar(20),
+    image varchar(200),
     description TEXT(500),
     a_unit_of_price varchar(255),
     primary key (id)
