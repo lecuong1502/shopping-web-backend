@@ -79,7 +79,7 @@ app.post("/api/login", async (req, res) => {
       const tokenQuery = `UPDATE User SET token='${token}' WHERE gmail='${gmail}';`;
       await queryAsync(tokenQuery);
 
-      res.json({ success: true, token });
+      res.json({ ...resultUsers[0], password: null });
     } else {
       res.json({ error: "Not exist account" });
     }
