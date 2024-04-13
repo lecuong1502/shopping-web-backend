@@ -1,38 +1,16 @@
-CREATE DATABASE shoppingWeb;
-show databases;
-use shoppingWeb;
-show tables;
-drop database shoppingweb;
-
-select * from User;
-
-
-select * from User
-where gmail='kiencuong@gmail.com' and password='12345678';
-
-
 drop database shoppingweb;
 CREATE DATABASE shoppingWeb;
 use shoppingWeb;
-CREATE TABLE Owner (
-	id int auto_increment NOT NULL,
-    name varchar(255),
-    password varchar(20),
-    token varchar(200),
-    gmail varchar(255) NOT NULL unique,
-    phoneNum varchar(15),
-    address varchar(255),
-    shopName varchar(255),
-    PRIMARY KEY (id)
-);
+
 CREATE TABLE User (
 	id int auto_increment NOT NULL,
     name varchar(255),
-    password varchar(20),
+    password varchar(100),
     token varchar(200),
     gmail varchar(255) NOT NULL unique,
     phoneNum varchar(15),
     address varchar(255),
+    isOwner boolean default false,
     PRIMARY KEY (id)
 );
 CREATE TABLE Product (
