@@ -60,13 +60,17 @@ app.post("/api/login", async (req, res) => {
     const loginQuery = `SELECT * FROM User WHERE gmail='${gmail}';`;
     
     const resultUsers = await queryAsync(loginQuery);
-    const checkPassword = await bcrypt.compare(hashedPassword, resultUsers[0].password);
 
-    if (resultUsers.length > 0) {
-      // token
-      if(checkPassword){
-        console.log(true);
-      }
+
+    if (resultUsers.length === 0) {
+      res.json({ error: "Not exist account" });
+      return;
+    }
+
+    const checkPassword = await bcrypt.compare(password, resultUsers[0].password);
+   
+    if (checkPassword) {
+      
       const secretKey = "domayhackduoc";
 
       const token = jwt.sign({ gmail }, secretKey, { expiresIn: "3m" });
