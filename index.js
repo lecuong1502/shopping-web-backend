@@ -117,7 +117,7 @@ app.post("/api/create-product", async (req, res) => {
   }
 });
 
-app.post("/api/products", async (req, res) => {
+app.get("/api/products", async (req, res) => {
   try {
     const printInfoAllProd = `SELECT * FROM Product;`;
     const resultProduct = await queryAsync(printInfoAllProd);
