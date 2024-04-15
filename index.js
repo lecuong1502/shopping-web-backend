@@ -3,9 +3,11 @@ const bcrypt = require("bcrypt");
 const bodyParser = require("body-parser");
 const { queryAsync } = require("./src/database");
 const jwt = require("jsonwebtoken");
+const cors = require("cors");
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 app.use(bodyParser.json());
 
 app.post("/api/signup", async (req, res) => {
