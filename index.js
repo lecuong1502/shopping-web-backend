@@ -141,6 +141,17 @@ app.get("/api/products/:id", async (req, res) => {
   }
 });
 
+app.get("/api/search-product", async (req, res) => {
+  try {
+    const {productName} = req.query;
+    const productQuery = `SELECT * FROM Product WHERE productName LIKE "%${productName}%"`;
+    const resultProduct = await queryAsync(productQuery);
+    res.json(resultProduct);
+  } catch (error) {
+    res.json({ error: "Error" });
+  }
+});
+
 // Start the server
 const port = 443;
 app.listen(port, () => {
