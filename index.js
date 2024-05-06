@@ -163,6 +163,19 @@ app.post("/api/delete-product/:id", async (req, res) => {
   }
 });
 
+app.post("/api/edit-product/:id", async (req, res) => {
+  try {
+    const productID = req.params.id;
+    const { productName, image, description, a_unit_of_price } = req.body;
+    const productQuery = `UPDATE Product SET productName="${productName}" WHERE id = "${productID}";`;
+    console.log(productQuery);
+    const resultProduct = await queryAsync(productQuery);
+    res.json(resultProduct);
+  } catch (error) {
+    res.json({ error: "Error" });
+  }
+});
+
 // Start the server
 const port = 443;
 app.listen(port, () => {
