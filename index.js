@@ -152,6 +152,17 @@ app.get("/api/search-product", async (req, res) => {
   }
 });
 
+app.post("/api/delete-product/:id", async (req, res) => {
+  try {
+    const productID = req.params.id;
+    const productQuery = `DELETE FROM Product WHERE id = "${productID}";`;
+    const resultProduct = await queryAsync(productQuery);
+    res.json(resultProduct);
+  } catch (error) {
+    res.json({ error: "Error" });
+  }
+});
+
 // Start the server
 const port = 443;
 app.listen(port, () => {
