@@ -186,10 +186,9 @@ app.post("/api/order/:id", async(req, res) => {
     const totalPrice = priceCalcu * amount;
     const orderQuery = `INSERT INTO Ordering (productID , price, amount) VALUES('${productID}', '${totalPrice}', '${amount}');`;
     const resultPrice = await queryAsync(orderQuery);
-    console.log(resultPrice)
     res.json({ success: true });
   } catch (error) {
-    res.json({ error: "Error" });
+    res.json({ error: error });
   }
 });
 
