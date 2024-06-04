@@ -168,7 +168,6 @@ app.post("/api/edit-product/:id", async (req, res) => {
     const productID = req.params.id;
     const { productName, image, description, a_unit_of_price } = req.body;
     const productQuery = `UPDATE Product SET productName="${productName}" WHERE id = "${productID}";`;
-    console.log(req, productName, productQuery);
     const resultProduct = await queryAsync(productQuery);
     res.json(resultProduct);
   } catch (error) {
@@ -176,6 +175,23 @@ app.post("/api/edit-product/:id", async (req, res) => {
   }
 });
 
+app.post("/api/order/:id", async(req, res) => {
+  try {
+    const productID = req.params.id;
+    const {amount} = req.body;
+    const priceUnit = `SELECT a_unit_of_price FROM Product WHERE id="${productID}";`;
+    
+    const resultProduct = await queryAsync(priceUnit);
+    const priceCalcu = parseInt(resultProduct[0].a_unit_of_price);
+    const totalPrice = priceCalcu * amount;
+    const orderQuery = `INSERT INTO Ordering (productID , price, amount) VALUES('${productID}', '${totalPrice}', '${amount}');`;
+    const resultPrice = await queryAsync(orderQuery);
+    console.log(resultPrice)
+    res.json({ success: true });
+  } catch (error) {
+    res.json({ error: "Error" });
+  }
+});
 
 // Start the server
 const port = 443;
