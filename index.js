@@ -168,7 +168,7 @@ app.post("/api/edit-product/:id", async (req, res) => {
     const productID = req.params.id;
     const { productName, image, description, a_unit_of_price } = req.body;
     const productQuery = `UPDATE Product SET productName="${productName}" WHERE id = "${productID}";`;
-    console.log(productQuery);
+    console.log(req, productName, productQuery);
     const resultProduct = await queryAsync(productQuery);
     res.json(resultProduct);
   } catch (error) {
