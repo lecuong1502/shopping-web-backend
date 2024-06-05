@@ -177,6 +177,16 @@ app.post("/api/edit-product/:id", async (req, res) => {
 
 app.post("/api/order/:id", async(req, res) => {
   try {
+    const { token } = req.headers;
+    const findUserQuery = `SELECT * FROM User WHERE token='${token}';`;
+    const resultUsers = await queryAsync(findUserQuery);
+    if (resultUsers.length === 0) {
+      res.json({ error: "Invalid token" });
+      return;
+    }
+
+    const userID = parseInt(resultUsers[0].id);
+
     const productID = req.params.id;
     const {amount} = req.body;
     const priceUnit = `SELECT a_unit_of_price FROM Product WHERE id="${productID}";`;
@@ -184,11 +194,33 @@ app.post("/api/order/:id", async(req, res) => {
     const resultProduct = await queryAsync(priceUnit);
     const priceCalcu = parseInt(resultProduct[0].a_unit_of_price);
     const totalPrice = priceCalcu * amount;
-    const orderQuery = `INSERT INTO Ordering (productID , price, amount) VALUES('${productID}', '${totalPrice}', '${amount}');`;
+    const orderQuery = `INSERT INTO Ordering (userID, productID , price, amount) VALUES('${userID}','${productID}', '${totalPrice}', '${amount}');`;
     const resultPrice = await queryAsync(orderQuery);
     res.json({ success: true });
   } catch (error) {
     res.json({ error: error });
+  }
+});
+
+app.get("/api/history", async (req, res) => {
+  try {
+    const { token } = req.headers;
+    const findUserQuery = `SELECT * FROM User WHERE token='${token}';`;
+    const resultUsers = await queryAsync(findUserQuery);
+
+    if (resultUsers.length === 0) {
+      res.json({ error: "Invalid token" });
+      return;
+    }
+
+    const userID = parseInt(resultUsers[0].id);
+    const printInfoAllProd = `SELECT * FROM Ordering WHERE userID = '${userID}';`;
+    const resultProduct = await queryAsync(printInfoAllProd);
+    res.json({ data: resultProduct });
+  } catch (error) {
+    console.log(error);
+    res.json({ error: "Not any products" });
+    return;
   }
 });
 
