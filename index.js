@@ -224,6 +224,34 @@ app.get("/api/history", async (req, res) => {
   }
 });
 
+app.get("/api/history-order", async (req, res) => {
+  try {
+    const { token } = req.headers;
+    const findUserQuery = `SELECT * FROM User WHERE token='${token}';`;
+    const resultUsers = await queryAsync(findUserQuery);
+    console.log(token, resultUsers)
+
+    if (resultUsers.length === 0) {
+      res.json({ error: "Invalid token" });
+      return;
+    }
+
+    // if (!resultUsers[0].isOwner) {
+    //   res.json({ error: "No permission" });
+    //   return;
+    // }
+
+    const userID = parseInt(resultUsers[0].id);
+    console.log(userID)
+
+
+  } catch (error) {
+    console.log(error);
+    res.json({ error: "Not any ordering" });
+    return;
+  }
+});
+
 // Start the server
 const port = 443;
 app.listen(port, () => {
