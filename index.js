@@ -229,22 +229,29 @@ app.get("/api/history-order", async (req, res) => {
     const { token } = req.headers;
     const findUserQuery = `SELECT * FROM User WHERE token='${token}';`;
     const resultUsers = await queryAsync(findUserQuery);
-    console.log(token, resultUsers)
 
     if (resultUsers.length === 0) {
       res.json({ error: "Invalid token" });
       return;
     }
 
-    // if (!resultUsers[0].isOwner) {
-    //   res.json({ error: "No permission" });
-    //   return;
-    // }
+    if (!resultUsers[0].isOwner) {
+      res.json({ error: "No permission" });
+      return;
+    }
 
     const userID = parseInt(resultUsers[0].id);
-    console.log(userID)
 
-
+    const printInfoProd = `SELECT * FROM Ordering WHERE userID = '${userID}';`;
+    const resultOrder = await queryAsync(printInfoProd);
+    const productID = parseInt(resultOrder[0].userID);
+    // const productID = `SELECT productID FROM Ordering WHERE userID = '${userID}';`;
+    const productName = `SELECT productName FROM Product WHERE id = '${productID}';`;
+    const userName = `SELECT name FROM User WHERE token='${token}';`;
+    const resultName = await queryAsync(productName);
+    const resultProduct = await queryAsync(userName);
+    console.log(productID, resultName)
+    res.json({ data: resultProduct, resultName });
   } catch (error) {
     console.log(error);
     res.json({ error: "Not any ordering" });
