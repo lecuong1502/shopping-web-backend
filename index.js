@@ -248,10 +248,14 @@ app.get("/api/history-order", async (req, res) => {
     // const productID = `SELECT productID FROM Ordering WHERE userID = '${userID}';`;
     const productName = `SELECT productName FROM Product WHERE id = '${productID}';`;
     const userName = `SELECT name FROM User WHERE token='${token}';`;
-    const resultName = await queryAsync(productName);
-    const resultProduct = await queryAsync(userName);
-    console.log(productID, resultName)
-    res.json({ data: resultProduct, resultName });
+    const resultName = await queryAsync(userName);
+    const resultProduct = await queryAsync(productName);
+    res.json({ 
+      data: {
+        productData: resultProduct,
+        userData: resultName
+      }
+    });
   } catch (error) {
     console.log(error);
     res.json({ error: "Not any ordering" });
