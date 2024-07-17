@@ -281,6 +281,32 @@ app.post("/api/products/:id", async(req, res) => {
   }
 });
 
+app.get("/api/show-comment", async (req, res) => {
+  try {
+    const { token } = req.headers;
+    const findUserQuery = `SELECT * FROM User WHERE token='${token}';`;
+    const resultUsers = await queryAsync(findUserQuery);
+
+    const userID = parseInt(resultUsers[0].id);
+    const userName = `SELECT name FROM User WHERE token='${token}';`;
+    const printInfoComment = `SELECT comment FROM Comment WHERE userID = '${userID}';`;
+    const resultComment = await queryAsync(printInfoComment);
+    const resultName = await queryAsync(userName);
+    console.log(resultComment)
+
+    res.json({ 
+      data: {
+        commentData: resultComment,
+        userData: resultName
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({ error: "Not any comment" });
+    return;
+  }
+});
+
 // Start the server
 const port = 443;
 app.listen(port, () => {
