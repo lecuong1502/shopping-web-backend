@@ -263,6 +263,24 @@ app.get("/api/history-order", async (req, res) => {
   }
 });
 
+app.post("/api/products/:id", async(req, res) => {
+  try {
+    const productID = req.params.id;
+    const { token } = req.headers;
+    const findUserQuery = `SELECT * FROM User WHERE token='${token}';`;
+    const resultUsers = await queryAsync(findUserQuery);
+    const userID = parseInt(resultUsers[0].id);
+    const { comment } = req.body;
+    const createCommentQuery = `INSERT INTO Comment (userID, productID, comment) VALUES ('${userID}', '${productID}', '${comment}');`;
+    const resultComment = await queryAsync(createCommentQuery);
+    res.json({ success: true });
+  } catch (error) {
+    console.log(error);
+    res.json({ error: "Not any comments" });
+    return;
+  }
+});
+
 // Start the server
 const port = 443;
 app.listen(port, () => {

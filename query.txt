@@ -1,6 +1,13 @@
-drop database shoppingweb;
 CREATE DATABASE shoppingWeb;
+show databases;
 use shoppingWeb;
+show tables;
+drop database shoppingweb;
+
+select * from User;
+select * from Product;
+select * from Ordering;
+select * from Comment;
 
 CREATE TABLE User (
 	id int auto_increment NOT NULL,
@@ -37,7 +44,17 @@ CREATE TABLE Ordering (
     selectedProduct varchar(255),
     productID int,
     amount int,
+    a_unit_of_price varchar(255),
+    price int,
     PRIMARY KEY (id),
     foreign key (userID) references User(id),
+    foreign key (productID) references Product(id)
+);
+
+CREATE TABLE Comment (
+	userID int,
+    productID int,
+	comment TEXT(600),
+	foreign key (userID) references User(id),
     foreign key (productID) references Product(id)
 );
