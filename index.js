@@ -288,18 +288,11 @@ app.get("/api/show-comment", async (req, res) => {
     const findUserQuery = `SELECT * FROM User WHERE token='${token}';`;
     const resultUsers = await queryAsync(findUserQuery);
 
-    const userID = parseInt(resultUsers[0].id);
-    const userName = `SELECT name FROM User WHERE token='${token}';`;
-    const printInfoComment = `SELECT comment FROM Comment WHERE productID = '${productID}';`;
+    const printInfoComment = `SELECT Comment.*, User.name FROM Comment LEFT JOIN User ON Comment.userID = User.id WHERE productID = ${productID};`;
     const resultComment = await queryAsync(printInfoComment);
-    const resultName = await queryAsync(userName);
-    console.log(resultComment)
 
     res.json({ 
-      data: {
-        commentData: resultComment,
-        userData: resultName
-      }
+      data: resultComment
     });
   } catch (error) {
     console.log(error);
