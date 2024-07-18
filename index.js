@@ -283,13 +283,14 @@ app.post("/api/products/:id", async(req, res) => {
 
 app.get("/api/show-comment", async (req, res) => {
   try {
+    const productID = req.query.id;
     const { token } = req.headers;
     const findUserQuery = `SELECT * FROM User WHERE token='${token}';`;
     const resultUsers = await queryAsync(findUserQuery);
 
     const userID = parseInt(resultUsers[0].id);
     const userName = `SELECT name FROM User WHERE token='${token}';`;
-    const printInfoComment = `SELECT comment FROM Comment WHERE userID = '${userID}';`;
+    const printInfoComment = `SELECT comment FROM Comment WHERE productID = '${productID}';`;
     const resultComment = await queryAsync(printInfoComment);
     const resultName = await queryAsync(userName);
     console.log(resultComment)
